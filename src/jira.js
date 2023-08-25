@@ -1,8 +1,8 @@
 const axios = require("axios").default;
 const { Duration, DateTime } = require("luxon");
 const RestApiVersion = 3;
-const RestApiBase = `https://team-1589222926317.atlassian.net/rest/api/${RestApiVersion}`;
-const Authorization = `Basic ${btoa(`${email}:${jiraApiKey}`)}`;
+const RestApiBase = `https://${process.env.JIRA_TEAM_ID}.atlassian.net/rest/api/${RestApiVersion}`;
+const Authorization = `Basic ${btoa(`${process.env.JIRA_EMAIL}:${process.env.JIRA_API_KEY}`)}`;
 
 // Map<IssueKey, InternalWorklog>
 const Worklogs = new Map();
@@ -45,7 +45,7 @@ async function getWorklogsByIssueKey(issueKey) {
     },
   });
   const worklog = res.data.worklogs
-    .filter((worklog) => worklog.author.emailAddress == email)
+    .filter((worklog) => worklog.author.emailAddress == process.env.JIRA_EMAIL)
     .map((worklog) => mapWorklogToInternalFormat(worklog, issueKey));
   Worklogs.set(issueKey, worklog);
   return worklog;

@@ -1,20 +1,15 @@
-const { google } = require("googleapis");
-const { authorize, listEvents } = require("./google_cal");
+require("dotenv").config();
+const { listEvents, mapCalIssueKeyToActualKey } = require("./ical");
 const {
   getWorklogsByIssueKey,
   getWorklogByIssueKeyAndStartDate,
   createWorklog,
   clearWorklogs,
 } = require("./jira");
-const { DateTime } = require("luxon");
-const { async } = require("node-ical");
-
-const workCalendar =
-  "efb90ebeae5211833c97691e80f69ea068eaad167069548956be340dd96dbd90@group.calendar.google.com";
+const ical = require('node-ical');
 
 async function main() {
-  const client = await authorize();
-  const events = await listEvents(google, client, workCalendar);
+  const events = await listEvents(ical, process.env.ICAL_PRIVATE_URL);
   let flatWorklogs = events.map(async (ev) => {
     try {
       return await getWorklogsByIssueKey(ev.issueKey);
@@ -36,5 +31,4 @@ async function main() {
 
 }
 
-// main().then();
-// createWorklog({issueKey: 'CC-5648', start: DateTime.fromISO('2023-08-23T09:00:00.00+02:00'), end: DateTime.fromISO('2023-08-23T09:00:00.00+02:00')});
+main().then();
