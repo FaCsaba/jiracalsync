@@ -12,7 +12,7 @@ const mockICalLib = {
 };
 
 test("ical gives back internal calendar event type", async () => {
-  const ical = new ICal("./tests/fake.ical", {}, mockICalLib);
+  const ical = new ICal("./tests/fake.ical", {}, mockICalLib, () => { });
   const asdf = await ical.getEvents();
 
   expect(asdf).toStrictEqual([
