@@ -1,3 +1,4 @@
 node_modules
 dst
 mappings.json
+test/*.js
