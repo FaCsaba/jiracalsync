@@ -5,7 +5,7 @@ import { Jira } from "./jira";
 import { def } from "./util";
 import { Logger, loggerFactory } from "./logger";
 import { LogType } from "./models/log_type.model";
-import { readFileSync } from "node:fs";
+import { readFileSync, writeFileSync } from "node:fs";
 
 /**
  * We want to sort out our mappings and events into three categories
@@ -14,20 +14,22 @@ import { readFileSync } from "node:fs";
  * 2. `mappedEvents` are events that we do know that exist and have a worklog associated with it
  * 3. `deletedEvents` are mappings that have an event associated with them but
  * that event can't be found, which most likely meanst that it was deleted
+ * 
+ * NOTE: deletedEventMappings are type ICalEventWorklogMappings because the event associated with the mapping has been deleted
  * ```
  *  Events
  * ┌─────────────────────────┐
  * │                         │
  * │ unmappedEvents          │
- * │                         │   Mappings
+ * │ ICalEvent               │   Mappings
  * │          ┌──────────────┼───────────┐
  * │          │              │           │
  * │          │ mappedEvents │           │
- * │          │              │           │
+ * │          │ ICalEvent    │           │
  * └──────────┼──────────────┘           │
  *            │                          │
  *            │            deletedEvents │
- *            │                          │
+ *            │            Mapping       │
  *            └──────────────────────────┘
  * ```
  */
@@ -88,8 +90,17 @@ export class Mapper {
       mappedEvents.push(event);
     }
 
+    // TODO: check changes in the mapped events and dowloaded worklogs
 
+    // TODO: delete worklogs that no longer have
 
+    try {
+      this.log(LogType.Try, "Trying to save mappings.json");
+      writeFileSync('mappings.json', JSON.stringify(this.mappings), { encoding: 'utf-8' });
+      this.log(LogType.Ok, "Successfully saved mappings.json");
+    } catch (error) {
+      this.log(LogType.Error, `Could not save mappings.json because:\n${error}`);
+    }
     return this.mappings;
   }
 }
