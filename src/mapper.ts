@@ -39,7 +39,7 @@ export class Mapper {
     private mappings: ICalEventWorklogMapping[] = tryOrDefault(() => JSON.parse(readFileSync("./mappings.json", { encoding: "utf-8" })), []),
     private log: Logger = loggerFactory("MAP")
   ) {
-    this.log(LogType.Ok, `MAPPINGS =\n${JSON.stringify(mappings)}`);
+    this.log(LogType.Inf, `MAPPINGS =\n${JSON.stringify(mappings)}`);
   }
 
   public logMapping(mapping: ICalEventWorklogMapping) {
