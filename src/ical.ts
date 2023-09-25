@@ -14,6 +14,7 @@ export class ICal {
     private log = loggerFactory("ICAL"),
   ) {
     log(LogType.Inf, `ICAL_PRIVATE_URL = ${this.calURL}`);
+    log(LogType.Inf, `SUBS = ${JSON.stringify(this.subs)}`)
   }
 
   /**
