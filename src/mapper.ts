@@ -2,7 +2,7 @@ import { ICalEventWorklogMapping } from "./models/ical_event_jira_worklog_mappin
 import { ICalEvent } from "./models/ical_cal_event.model";
 import { JiraWorklog } from "./models/jira_worklog.model";
 import { Jira } from "./jira";
-import { def } from "./util";
+import { tryOrDefault } from "./util";
 import { Logger, loggerFactory } from "./logger";
 import { LogType } from "./models/log_type.model";
 import { readFileSync, writeFileSync } from "node:fs";
@@ -36,7 +36,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 export class Mapper {
   constructor(
     private jira: Jira,
-    private mappings: ICalEventWorklogMapping[] = def(() => JSON.parse(readFileSync("./mappings.json", { encoding: "utf-8" })), []),
+    private mappings: ICalEventWorklogMapping[] = tryOrDefault(() => JSON.parse(readFileSync("./mappings.json", { encoding: "utf-8" })), []),
     private log: Logger = loggerFactory("MAP")
   ) {
     this.log(LogType.Ok, `MAPPINGS =\n${JSON.stringify(mappings)}`);

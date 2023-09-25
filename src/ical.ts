@@ -4,12 +4,12 @@ import { ICalEvent } from "./models/ical_cal_event.model";
 import { loggerFactory } from "./logger";
 import { LogType } from "./models/log_type.model";
 import { readFileSync } from "node:fs";
-import { def } from "./util";
+import { tryOrDefault } from "./util";
 
 export class ICal {
   constructor(
     private calURL = process.env.ICAL_PRIVATE_URL || "ICAL_PRIVATE_URL not found in the environment. Did you add it to .env file?",
-    private subs: { [key: string]: string } = def(() => JSON.parse(readFileSync("./subs.json", "utf-8")), {}),
+    private subs: { [key: string]: string } = tryOrDefault(() => JSON.parse(readFileSync("./subs.json", "utf-8")), {}),
     private ical = icalModule,
     private log = loggerFactory("ICAL"),
   ) {
